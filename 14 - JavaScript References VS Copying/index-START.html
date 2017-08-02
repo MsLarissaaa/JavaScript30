@@ -8,43 +8,139 @@
 
   <script>
     // start with strings, numbers and booleans
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    // 100 100
+    age = 200;
+    console.log(age, age2);
+    // 200 100
+
+    let name = 'Larissa';
+    let name2 = name;
+    console.log(name, name2);
+    // Larissa Larissa
+    name = 'larissa!';
+    console.log(name, name2);
+    // larissa! Larissa
 
     // Let's say we have an array
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
 
     // and we want to make a copy of it.
+    const team = players;
+    console.log(players, team);
+    // ["Wes", "Sarah", "Ryan", "Poppy"]
+    // ["Wes", "Sarah", "Ryan", "Poppy"]
+
 
     // You might think we can just do something like this:
+    team[3] = 'Lux';
 
     // however what happens when we update that array?
-
-    // now here is the problem!
-
+    console.log(players, team);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "Lux"]
     // oh no - we have edited the original array too!
-
+    // When you update an array, it always references back.
     // Why? It's because that is an array reference, not an array copy. They both point to the same array!
 
     // So, how do we fix this? We take a copy instead!
+    // one way:
+    const team2 = players.slice();
+    console.log(players, team2);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "Lux"]
 
-    // one way
+    team2[3] = 'LaSalle';
+    console.log(players, team2);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "LaSalle"]
 
-    // or create a new array and concat the old one in
+    // or create a new array and concat the old one in:
+    const team3 = [].concat(players);
+    console.log(players, team3);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "Lux"]
 
     // or use the new ES6 Spread
+    const team4 = [...players];
+    console.log(players, team4);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+
+    // OR
+    const team5 = Array.from(players);
+    console.log(players, team5);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "Lux"]
 
     // now when we update it, the original one isn't changed
+    team4[3] = 'heeee haaaawwwwww';
+    console.log(players, team4);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "heeee haaaawwwwww"]
 
-    // The same thing goes for objects, let's say we have a person object
+    team5[3] = 'yooouuuu halllooooo';
+    console.log(players, team5);
+    // ["Wes", "Sarah", "Ryan", "Lux"]
+    // ["Wes", "Sarah", "Ryan", "yooouuuu halllooooo"]
 
-    // with Objects
+    // The same thing goes for objects, let's say we have a person object with Objects:
+    const person = {
+      name: 'Larissa Metz',
+      age: 28
+    };
 
     // and think we make a copy:
+    const theLar = person;
+    theLar.number = 27;
+    console.log(person, theLar);
+    // Object {name: "Larissa Metz", age: 28, number: 27}
+    // Object {name: "Larissa Metz", age: 28, number: 27}
 
     // how do we take a copy instead?
+    const theLar2 = Object.assign({}, person, { number: 123});
+    console.log(person, theLar2);
+    // Object {name: "Larissa Metz", age: 28, number: 27}
+    // Object {name: "Larissa Metz", age: 28, number: 123}
 
     // We will hopefully soon see the object ...spread
+    // const theLar3 = {...person}; - Not a thing in plain JS yet (but exists in React?).
 
     // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    const larissa = {
+      name: 'Larissa',
+      age: 28,
+      social: {
+        twitter: '@mslarissaaa',
+        facebook: ':P'
+      }
+    };
+
+    console.log(larissa);
+    // Object {name: "Larissa", age: 28, social: Object}
+
+    // This is a workaround, but not a good idea to use it?
+    const dev = Object.assign({}, larissa);
+    console.log(dev.social);
+    // Object {twitter: "@mslarissaaa", facebook: ":P"}
+    dev.social.twitter = '@zbest';
+    console.log(dev.social);
+    // Object {twitter: "@zbest", facebook: ":P"}
+    console.log(larissa.social);
+    // Object {twitter: "@zbest", facebook: ":P"}
+
+    // A 'poor man's way' to make a deep clone while shaking off all the references:
+    const dev2 = JSON.parse(JSON.stringify(larissa)); // Turn it into a string, no longer an object, and then immediately into a new object again.
+    console.log(dev2);
+    // Object {name: "Larissa", age: 28, social: Object}
+
+    dev2.social.twitter = '@theawesome';
+    console.log(dev2.social);
+    // Object {twitter: "@theawesome", facebook: ":P"}
+    console.log(larissa.social);
+    // Object {twitter: "@zbest", facebook: ":P"}
 
   </script>
 
